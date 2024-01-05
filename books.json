@@ -1,0 +1,58 @@
+[
+    {
+        "title": "3",
+        "author": "Hafemi3",
+        "releasedate": "1.02.2002",
+        "description": "third testbook",
+        "id": 84534,
+        "status": "rented"
+    },
+    {
+        "title": "3",
+        "author": "ee",
+        "releasedate": "n",
+        "description": "i",
+        "id": 84534,
+        "status": "rented"
+    },
+    {
+        "title": "3",
+        "author": "Hafemiii",
+        "releasedate": "today",
+        "description": "today",
+        "id": 84534,
+        "status": "rentable"
+    },
+    {
+        "title": "Another test",
+        "author": "lol",
+        "releasedate": "12.23.2001",
+        "description": "lol",
+        "id": 90432,
+        "status": "rented"
+    },
+    {
+        "title": "a",
+        "author": "b",
+        "releasedate": "c",
+        "description": "d",
+        "id": 343,
+        "status": "rentable"
+    },
+    {
+        "title": "a",
+        "author": "b",
+        "releasedate": "c",
+        "description": "d",
+        "id": 343,
+        "status": "rentable"
+    },
+    {
+        "title": "SD",
+        "author": "asd",
+        "releasedate": "df",
+        "description": "s",
+        "id": 49032,
+        "status": "rentable"
+    }
+]
