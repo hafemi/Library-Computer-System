@@ -17,7 +17,7 @@ A Simple representation of how a Library System could work with a CLI (Command L
 - Search for a book by title/id
 
 
-There are also additional functions which check/do different things, such as:
+There are also additional functions that check/do different things, such as:
 - generate new ID if the input was empty/not available id
 - check if the same title exists and if so change the id according to that
 - "did you mean .." errors with fuzzy search
@@ -25,12 +25,12 @@ There are also additional functions which check/do different things, such as:
 
 ## Setup
 
-This Project only contains the code/files for it. To use it you already need a IDE (Integrated Development Environment), for example Visual Studio Code (python extension needed), Pycharm etc.
-In case you have any of these, just download the files/copy the code and put it inside the folder where your project is located at (all 3 are needed).
+This Project only contains the code/files for it. To use it you already need an IDE (Integrated Development Environment), for example, Visual Studio Code (python extension needed), Pycharm etc.
+In case you have any of these, just download the files/copy the code and put it inside the folder where your project is located (all 3 are needed).
 
-After running the code you are going to get instructions on what you can do. In order to choose the librarian role you have to enter a password, which is "test1".
+After running the code, you are going to get instructions on what you can do. In order to choose the librarian role, you have to enter a password, which is "test1".
 
 ## Credits
-To learn different things I have read trough these websites, but of course they were not the only ones:
+To learn different things, I have read through these websites, but of course they are not the only ones:
 - Fuzzy search: https://www.datacamp.com/tutorial/fuzzy-string-python or https://www.geeksforgeeks.org/fuzzywuzzy-python-library/
 - Hashing Password: https://www.geeksforgeeks.org/how-to-hash-passwords-in-python/
