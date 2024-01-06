@@ -36,7 +36,7 @@ class librarian:
             "author": author,
             "releasedate": release_date,
             "description": description,
-            "id": int(id),
+            "id": int(id), #some numbers can be a string
             "status": "rentable"
         }
 
@@ -114,6 +114,10 @@ def confirm_inputs(id, title):
             id_list.append(book_id) # id's to avoid for random generating
             if title == book_title: # overwrite id if double existing title
                 id = book_id
+                break
+            if id == book_id: #generate new id if it already exists
+                id = generate_random_id(id_list)
+                break
 
         if id == '':
             id = generate_random_id(id_list)
@@ -125,7 +129,7 @@ def get_book_information():
     author = input('Who is the author: ')
     release_date = input('When was the book published:  ')
     description = input('Description: ')
-    id = input('Enter ID: ')
+    id = int(input('Enter ID: '))
     id = confirm_inputs(id, title)
     return title, author, release_date, description, id
 
@@ -135,7 +139,7 @@ def request_password():
         login_password = file.read().encode()[2:-1]  # turn string to byte and remove double quote mark
         while True:
             password = input("Password: ").encode()
-            if bcrypt.hashpw(password, login_password) == login_password:
+            if bcrypt.hashpw(password, login_password) == login_password: #compare password with the login_password
                 print("Password correct")
                 break
             else:
@@ -147,7 +151,7 @@ while True:
     role = input("What role are you?: ").lower()
     fuzzy_list = process.extractOne(role, valid_fuzzy_terms["roles"])
 
-    if fuzzy_list[1] == 100:
+    if fuzzy_list[1] == 100: #only run statement if input is 100% correct
         if role == "librarian":
             request_password()
             librarian.get_input()
