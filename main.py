@@ -3,32 +3,8 @@ import json
 import random
 from fuzzywuzzy import process
 
-valid_fuzzy_terms = {
-    'roles': ['librarian', 'visitor'],
-    'librarian_actions': ['Add Book', 'See rented Books', 'See Book Stock', 'Change password', 'help']
-}
-
 
 class librarian:
-    def get_input():
-        while True:
-            action = input('Action: ').lower()
-            match action:
-                case 'add book':
-                    librarian.add_book()
-                case 'see rented books':
-                    librarian.see_rented_books()
-                case 'see book stock':
-                    librarian.see_book_stock()
-                case 'change password':
-                    librarian.change_password()
-                case 'help':
-                    print('All actions:')
-                    print('1. Add book 2. See rented books 3. See book stock 4. Change password')
-                case _:
-                    fuzzy_list = process.extractOne(action, valid_fuzzy_terms['librarian_actions'])
-                    print(f'There is no action named {action}, did you mean "{fuzzy_list[0]}"? Type "help" for more.')
-
     def add_book():
         title, author, release_date, description, id = get_book_information()
         book = {
@@ -47,10 +23,10 @@ class librarian:
             json.dump(file_content, file, indent=4)
 
     def see_rented_books():
-        view_book_inventory('There are no rented books', 'rented', 'Times rented:')
+        view_book_inventory('rented', 'There are no rented books', 'Times rented:')
 
     def see_book_stock():
-        view_book_inventory('There are no rentable books', 'rentable', 'Copies:')
+        view_book_inventory('rentable', 'There are no rentable books', 'Copies:')
 
     def change_password():
         request_password()
@@ -61,7 +37,101 @@ class librarian:
             file.write(str(hashed_password))
 
 
-def make_books_list(books, status): #used for 2 different purposes
+class visitor:
+    def rent_book():
+        manage_book_status('Book you want to rent: ', 'rentable', 'rented',
+                           'Book is now being rented. Enjoy reading! :)',
+                           'Book Title/ID cant be found or is not rentable')
+
+    def return_book():
+        manage_book_status('Book you want to return: ', 'rented', 'rentable',
+                           'Book is rentable now.',
+                           "Book Title/ID can't be found or is not rented")
+
+    def search_for_book():
+        desired_book = input('Search for Book/ID: ')
+        if desired_book.isdigit():
+            desired_book = int(desired_book) #turn string to int so we can search for id
+        with open('books.json', 'r') as file:
+            books = json.load(file)
+            book_found = False #used to print message if no book is found
+
+            for book in books:
+                book_title, book_author, book_release, book_desc, book_id, book_status = get_book_data(book)
+                if desired_book in (book_title, book_id):
+                    book_found = True
+                    print(' ') #placeholder
+                    print(f'Title: {book_title} - Author: {book_author}')
+                    print(f'Releasedate: {book_release}')
+                    print(f'Description {book_desc}')
+                    print(f'ID: {book_id} - Status: {book_status}')
+            if not book_found:
+                print('No Book found.')
+
+
+valid_fuzzy_terms = {
+    'roles': ['librarian', 'visitor'],
+    'librarian': ['Add Book', 'See rented Books', 'See Book Stock', 'Change password', 'help'],
+    'visitor': ['Rent Book', 'Return Book', 'See Book Stock', 'Search for Book', 'help']
+}
+
+
+actions_dict = {
+    'librarian': {
+        'add book': librarian.add_book,
+        'see rented books': librarian.see_rented_books,
+        'see book stock': librarian.see_book_stock,
+        'change password': librarian.change_password
+    },
+    'visitor': {
+        'rent book': visitor.rent_book,
+        'see book stock': librarian.see_book_stock, #its librarian class because the function does the same
+        'return book': visitor.return_book,
+        'search for book': visitor.search_for_book
+    }
+}
+
+
+def get_book_data(book):
+    book_title = book.get('title')
+    book_author = book.get('author')
+    book_release = book.get('releasedate')
+    book_desc = book.get('description')
+    book_id = book.get('id')
+    book_status = book.get('status')
+    return book_title, book_author, book_release, book_desc, book_id, book_status
+
+
+def change_status_if_existent(book, books, file, new_status, printmessage1):
+    book['status'] = new_status #change status to rented/rentable
+    file.seek(0)
+    json.dump(books, file, indent=4)
+    file.truncate()
+    print(printmessage1) 
+
+
+def manage_book_status(input_message, status, new_status, printmessage1, printmessage2): #used for 2 similar purposes
+    while True:
+        desired_book = input(input_message)
+        if desired_book.isdigit():
+            desired_book = int(desired_book) #turn string to int so we can search for id
+               
+        with open('books.json', 'r+') as file:
+            books = json.load(file)
+            for book in books:
+                book_title = book.get('title')
+                book_id = book.get('id')
+                book_status = book.get('status')
+
+                if desired_book in (book_title, book_id) and book_status == status:
+                    change_status_if_existent(book, books, file, new_status, printmessage1)
+                    break
+            else:
+                print(printmessage2)
+            break
+
+
+def make_books_list(books, status): #used for 2 similar purposes
     books_list = []
     for book in books:
         book_title = book.get('title')
@@ -134,6 +204,24 @@ def get_book_information():
     return title, author, release_date, description, id
 
 
+def get_input(role):
+    while True:
+        action = input('Action: ').lower()
+        if action == 'help':
+            print('Librarian - Add book, See rented books, See book stock, Change password')
+            print('Visitor   - Rent book, Return book, See book stock, Search for book')
+
+        elif action in actions_dict['librarian'] and role == 'librarian': #check if actions should be librarian's
+            actions_dict['librarian'][action]()
+
+        elif action in actions_dict['visitor'] and role == 'visitor': #check if actions should be visitor's
+            actions_dict['visitor'][action]()
+
+        else:
+            fuzzy_list = process.extractOne(action, valid_fuzzy_terms[role]) #get the best matching action 
+            print(f'There is no action named {action}, did you mean "{fuzzy_list[0]}"? Type "help" for more.')
+
+
 def request_password():
     with open("password.txt", "r") as file:
         login_password = file.read().encode()[2:-1]  # turn string to byte and remove double quote mark
@@ -149,13 +237,13 @@ def request_password():
 
 while True:
     role = input("What role are you?: ").lower()
-    fuzzy_list = process.extractOne(role, valid_fuzzy_terms["roles"])
+    fuzzy_list = process.extractOne(role, valid_fuzzy_terms["roles"]) #get the best matching role
 
     if fuzzy_list[1] == 100: #only run statement if input is 100% correct
         if role == "librarian":
             request_password()
-            librarian.get_input()
+            get_input(role)
         else:
-            print("...")  # placeholder for now
+            get_input(role)
     else:
         print(f'There is no role named {role}, did you mean "{fuzzy_list[0]}"?')
