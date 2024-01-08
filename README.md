@@ -2,8 +2,6 @@
 
 ## Description
 
-Still in work..
-
 A Simple representation of how a Library System could work with a CLI (Command Line Interface). Both librarians and visitors can do different tasks:
 
 ### Librarian functions
@@ -13,7 +11,7 @@ A Simple representation of how a Library System could work with a CLI (Command L
 - Seeing all the books that are not rented
 
 ### Visitor functions
-- Renting a book by the title/id and getting a book recommendation
+- Renting a book by the title/id
 - Return a book by title/id
 - See all rentable books
 - Search for a book by title/id
