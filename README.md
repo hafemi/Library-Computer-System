@@ -28,6 +28,8 @@ There are also additional functions that check/do different things, such as:
 This Project only contains the code/files for it. To use it you already need an IDE (Integrated Development Environment), for example, Visual Studio Code (python extension needed), Pycharm etc.
 In case you have any of these, just download the files/copy the code and put it inside the folder where your project is located (all 3 are needed).
 
+You also need to install the "bcrypt" and "fuzzywuzzy" Python packages, run your cmd and use "pip install (package)", for example: pip install bcrypt
+
 After running the code, you are going to get instructions on what you can do. In order to choose the librarian role, you have to enter a password, which is "test1".
 
 ## Credits
